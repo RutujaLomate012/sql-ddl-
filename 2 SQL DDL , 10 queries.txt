@@ -1,0 +1,66 @@
+CREATE DATABASE College;
+USE College;
+-- Create a table named Customers
+CREATE TABLE Customers (
+    Account_no INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(20) NOT NULL,
+    Balance INT,
+    City VARCHAR(20)
+);
+-- Insert data into the Customers table
+INSERT INTO Customers (Name, Balance, City) VALUES ('Ram', 10000, 'Pune');
+INSERT INTO Customers (Name, Balance, City) VALUES ('Ravi', 25000, 'Nashik'), ('Sachin', 30000, 'Mumbai');
+-- Select data from the Customers table
+SELECT * FROM Customers;
+
+-- Create a table named Loan
+CREATE TABLE Loan (
+    Loan_no INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(20) NOT NULL,
+    Loan_amount INT
+);
+-- Insert data into the Loan table
+INSERT INTO Loan (Name, Loan_amount) VALUES ('Ravi', 25000), ('Sachin', 30000);
+INSERT INTO Loan (Name, Loan_amount) VALUES ('Ram', 10000), ('Ravi', 50000), ('Dipak', 40000);
+-- Select data from the Loan table
+SELECT * FROM Loan;
+
+-- UNION of Names from Customers and Loan
+SELECT Name FROM Customers
+UNION
+SELECT Name FROM Loan;
+
+-- Customers with Names in Loan
+SELECT Name FROM Customers WHERE Name IN (SELECT Name FROM Loan);
+
+-- Customers with Names not in Loan
+SELECT Name FROM Customers WHERE Name NOT IN (SELECT Name FROM Loan);
+
+-- Create a view for Customers with Balance above 20000
+CREATE VIEW Customer_Above_20000 AS
+SELECT * FROM Customers WHERE Balance >= 20000;
+SELECT * FROM Customer_Above_20000;
+
+-- Create a view for Customers in Nashik with Balance above 20000
+CREATE VIEW Customer_Nashik AS
+SELECT * FROM Customers WHERE Balance >= 20000 AND City = 'Nashik';
+SELECT * FROM Customer_Nashik;
+
+-- Create an index on the Name column in the Customers table
+CREATE INDEX name_index ON Customers (Name);
+-- Show indexes in the Customers table
+SHOW INDEX FROM Customers;
+
+-- Create an index on Account_no and Name columns in the Customers table
+CREATE INDEX index1 ON Customers (Account_no, Name);
+-- Show indexes in the Customers table
+SHOW INDEX FROM Customers;
+
+-- Select Customers and sort by Balance in ascending order
+SELECT * FROM Customers ORDER BY Balance ASC;
+
+-- Select Loans and sort by Loan_amount in descending order
+SELECT * FROM Loan ORDER BY Loan_amount DESC;
+
+-- Calculate interest after 20 years
+SELECT Name, Loan_amount, Loan_amount * 0.04 * 20 AS InterestAfter20Yrs FROM Loan;
