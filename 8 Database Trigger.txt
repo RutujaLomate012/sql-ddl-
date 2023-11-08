@@ -1,0 +1,39 @@
+CREATE DATABASE Library;
+USE Library;
+CREATE TABLE lib_book (bid INT, bname VARCHAR(20), qty INT);
+CREATE TABLE lib_audit (bid INT, bname VARCHAR(20), qty INT);
+INSERT INTO lib_book VALUES (1, "Secret", 10), (2, "Hating game", 30), (3, "The Alchemist", 50), (4, "Love Hypothesis", 45);
+
+SELECT * FROM lib_book;
+SELECT * FROM lib_audit;
+
+DELIMITER //
+CREATE TRIGGER Make_audit1
+AFTER DELETE ON lib_book
+FOR EACH ROW
+BEGIN
+  INSERT INTO lib_audit (bid, bname, qty)
+  VALUES (OLD.bid, OLD.bname, OLD.qty);
+END;
+//
+DELIMITER ;
+
+DELETE FROM lib_book WHERE bid = 4 OR bid = 2;
+SELECT * FROM lib_book;
+SELECT * FROM lib_audit;
+
+DROP TRIGGER IF EXISTS Make_audit2;
+DELIMITER //
+CREATE TRIGGER Make_audit2
+AFTER UPDATE ON lib_book
+FOR EACH ROW
+BEGIN
+  INSERT INTO lib_audit (bid, bname, qty)
+  VALUES (OLD.bid, OLD.bname, OLD.qty);
+END;
+//
+DELIMITER ;
+
+UPDATE lib_book SET qty = 100 WHERE bname = "Secret";
+SELECT * FROM lib_book;
+SELECT * FROM lib_audit;

@@ -1,0 +1,16 @@
+db.createCollection("Student1");
+db.Student1.insert({RollNo: 1, Name: "Mansi"});
+db.Student1.insert({RollNo: 2, Name: "Ruchita", ClassName: "Computer"});
+db.Student1.insert([{RollNo: 3, Name: "Kaveri"}, {RollNo: 4, Name: "Pooja"}]);
+
+db.Student1.find();
+db.Student1.find().pretty();
+
+db.Student1.update({RollNo: 2}, {$set: {ClassName: "TE", Name: "Ruchita"}});
+db.Student1.find();
+
+db.Student1.remove({RollNo: 4});
+db.Student1.find().pretty();
+
+db.Student1.save({RollNo: 5, Name: "Damini", ClassName: "Computer"});
+db.Student1.find({$and: [{RollNo: 5}, {ClassName: "Computer"}]}).pretty();

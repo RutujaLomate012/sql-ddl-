@@ -1,0 +1,29 @@
+use EmployeeDB
+// Use the correct command to switch to the 'EmployeeDB' database
+
+db.employee.insert({ _id: 1, name: "Steve", age: 23, role: "Manager", project: "Nirvana", salary: 40000 });
+db.employee.insert({ _id: 2, name: "Tony", age: 28, role: "Developer", project: "Alexa", salary: 35000, tech: ['Java', 'Hibernate'] });
+db.employee.insert({ _id: 3, name: "Natasha", age: 30, role: "Designer", project: "Nirvana", salary: 32000, tech: ['React', 'Bootstrap'] });
+db.employee.insert({ _id: 4, name: "Groot", age: 21, role: "Sales Manager", project: "Cortana", salary: 28000 });
+db.employee.insert({ _id: 5, name: "Bruce", age: 32, role: "Marketing Manager", project: "Amazon Echo", salary: 38000 });
+db.employee.insert({ _id: 6, name: "Peter", age: 20, role: "Designer", project: "Alexa", salary: 25000 });
+db.employee.insert({ _id: 7, name: "MJ", age: 20, role: "Developer", project: "Siri", salary: 29000 });
+
+db.employee.find().pretty();
+
+db.employee.aggregate([
+    { $match: { project: "Alexa" } },
+    { $count: "People Working on Project:Alexa" }
+]);
+
+db.employee.aggregate([
+    { $group: { _id: "$role", totalPayment: { $sum: 1 }, min_age: { $min: "$age" } } }
+]);
+
+db.employee.createIndex({ "age": 1 });
+db.employee.createIndex({ "age": 1, "salary": 1 });
+db.employee.getIndexes();
+
+db.employee.dropIndex({ "age": 1 });
+db.employee.dropIndex({ "age": 1, "salary": 1 });
+db.employee.getIndexes();

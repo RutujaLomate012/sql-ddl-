@@ -1,0 +1,7 @@
+use Library
+db.books.insert([{bid:1,bname:"The Alchemist",author:"Paulo Coelho",price:200,status:"A"},{bid:2,bname:"The Secret",author:"Rhonda Byrne",price:300,status:"A"},{bid:3,bname:"Eleven Minutes",author:"Paulo Coelho",price:180,status:"A"},{bid:4,bname:"The Magic",author:"Rhonda Byrne",price:320,status:"NA"},{bid:5,bname:"Hero",author:"Rhonda Byrne",price:400,status:"A"},{bid:6,bname:"YOU CAN",author:"George Matthew Adams",price:100,status:"A"}]);
+db.books.find().pretty();
+
+db.books.mapReduce(function(){emit(this.author,this.price);},function(author,prices){return
+Array.sum(prices)},{query:{status:"A"},out:"AuthorTotalPrices"}); 
+db.AuthorTotalPrices.find().pretty();

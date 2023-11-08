@@ -1,0 +1,52 @@
+-- Create the 'borrower' table
+CREATE TABLE borrower (
+    Rollno INT,
+    Name VARCHAR(10),
+    DateofIssue DATE,
+    NameofBook VARCHAR(20),
+    Status VARCHAR(10)
+);
+
+-- Insert a row into the 'borrower' table
+INSERT INTO borrower (Rollno, Name, DateofIssue, NameofBook, Status) VALUES (1, 'Mansi', '2023-08-23', 'DBMS', 'I');
+
+-- Select all rows from the 'borrower' table
+SELECT * FROM borrower;
+
+-- Create the 'Fine' table
+CREATE TABLE Fine (
+    Rollno INT,
+    Date DATE,
+    Amt INT
+);
+
+-- Select all rows from the 'Fine' table
+SELECT * FROM Fine;
+
+-- Create the stored procedure 'p_fine'
+DELIMITER //
+CREATE PROCEDURE p_fine(IN rno INT, IN bname VARCHAR(20))
+BEGIN
+    DECLARE d1 DATE;
+    DECLARE daycnt INT;
+    DECLARE fine_amt INT;
+
+    SELECT DateofIssue INTO d1 FROM borrower
+    WHERE Rollno = rno AND NameofBook = bname;
+
+    SELECT DATEDIFF(NOW(), d1) INTO daycnt;
+
+    IF (daycnt >= 15 AND daycnt <= 30) THEN
+        SET fine_amt = daycnt * 5;
+        INSERT INTO Fine (Rollno, Date, Amt) VALUES (rno, NOW(), fine_amt);
+        UPDATE borrower SET Status = 'R' WHERE Rollno = rno;
+    ELSEIF (daycnt > 30) THEN
+        SET fine_amt = daycnt * 50;
+        INSERT INTO Fine (Rollno, Date, Amt) VALUES (rno, NOW(), fine_amt);
+        UPDATE borrower SET Status = 'R' WHERE Rollno = rno;
+    ELSE
+        UPDATE borrower SET Status = 'R' WHERE Rollno = rno;
+    END IF;
+END;
+//
+DELIMITER ;

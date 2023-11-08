@@ -1,0 +1,10 @@
+create table Student_Mark(RollNo int, Name varchar(20),Marks int, Branch varchar(20));
+Alter table Student_Mark ADD PRIMARY KEY (RollNo);
+insert into Student_Mark values(1,'Ravi',90,'Computer'),(2,'Vedika',70,'Computer'),(3,'Aarush',95,'IT'),(4,'Jyoti',60,'IT');
+select * from Student_Mark;
+select * from Student_Mark where Marks < 70;
+select * from Student_Mark where Marks=70 and Name='Vedika';
+update Student_Mark set Name='Sachin' where Name='Ravi';
+delete from Student_Mark where Name='Aarush';
+select * from Student_Mark;Select * from Student_Mark where Marks=(Select max(Marks) from Student_Mark);
+Select Branch, min(Marks) as Minimum,max(Marks) as Maximum,avg(Marks) as Average,sum(Marks) as Sum,count(Branch) as Count from Student_Mark group by Branch;

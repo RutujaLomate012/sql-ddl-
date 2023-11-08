@@ -1,0 +1,55 @@
+CREATE DATABASE Student;
+USE Student;
+
+CREATE TABLE Stud_Marks(rollno INT, name VARCHAR(30), marks INT);
+CREATE TABLE Result(rollno INT, name VARCHAR(30), class VARCHAR(20));
+
+INSERT INTO Stud_Marks VALUES (1, 'John Doe', 850), (2, 'Harry Potter', 1250), (3, 'Emma Watson', 1450), (4, 'Lucy Hutton', 950), (5, 'Tom Felton', 750);
+
+DROP PROCEDURE IF EXISTS proc_Grade;
+
+DELIMITER //
+CREATE PROCEDURE proc_Grade()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE s_marks INT;
+    DECLARE s_rollno INT;
+    DECLARE s_name VARCHAR(30);
+    DECLARE s_class VARCHAR(20);
+    
+    DECLARE s_student CURSOR FOR SELECT rollno, name, marks FROM Stud_Marks;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN s_student;
+    
+    read_loop: LOOP
+        FETCH s_student INTO s_rollno, s_name, s_marks;
+
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF s_marks <= 1500 AND s_marks >= 990 THEN
+            SET s_class = 'Distinction';
+        ELSEIF s_marks <= 989 AND s_marks >= 900 THEN
+            SET s_class = 'First Class';
+        ELSEIF s_marks <= 899 AND s_marks >= 825 THEN
+            SET s_class = 'Higher Second Class';
+        ELSE
+            SET s_class = 'Pass';
+        END IF;
+
+        INSERT INTO Result(rollno, name, class) VALUES (s_rollno, s_name, s_class);
+    END LOOP;
+    
+    CLOSE s_student;
+END;
+//
+DELIMITER ;
+
+SELECT * FROM Stud_Marks;
+SELECT * FROM Result;
+
+CALL proc_Grade();
+
+SELECT * FROM Result;
